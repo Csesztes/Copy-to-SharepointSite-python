@@ -1,0 +1,85 @@
+####################################### THIS CODE IS TO COPY EA REPORTS TO SHAREPOINT SITE #########################################xxxx
+# Power automate flow stops working after every three months, so workaround is needed.
+from datetime import date
+import shutil as copy
+import getpass
+
+#get filepath for EA report and sharepoint destination
+ntid:str = getpass.getuser()
+eareports_filepath:str = rf"C:\Users\{ntid}\OneDrive - dummy"
+destination_filepath:str =rf"C:\Users\{ntid}\OneDrive - dummy2"
+
+#get today date
+var_today = str(date.today())
+
+#determine EA reports name and exact destination folder
+ea_reports_dict = {
+        "\EA1. Regional Stock List.xlsb":"\EA1 Regional Stock List report",
+        "\EA2. Backorder and Open Orders.xlsb":"\EA2 Backorder and Open Orders report",
+        "\EA19. Overdue Purchase Requisitions.xlsb":"\EA19 Overdue Pur Requisitions",
+        "\EA24. Sales Order Obsolete.xlsb":"\EA24 Sales Order Obsolete",
+        "\EA32. Weekly Shipment Report.xlsb":"\EA32 Weekly Shipment Report",
+        "\EA34. NPI Phase In Phase Out.xlsb":"\EA34 NPI Phase In Phase Out",
+        "\EA35. Transport Priority List.xlsb":"\EA35 Transport Priority List",
+        "\EA36. Customer Report.xlsb":"\EA36. Customer Report",
+        "\EA41. IUS Performance.xlsb":"\EA41 IUS Performance Report",
+        "\EA44. IUS Orders.xlsb":"\EA44 IUS Orders",
+        "\EA45. US STOs.xlsb":"\EA45 US STOs",
+        "\EA47. CCSA Orders.xlsb":"\EA47 CCSA Orders",
+        "\EA8. Label Report.xlsb":"\EA8 Label Report",
+        "\EA9. Planning Stock List.xlsb":"\EA9 Planning Stock List"
+}
+
+def main_script():
+
+    print()
+    print("EA reports --> Sharepoint script started...")
+    print()
+    try:
+        for item in ea_reports_dict:
+
+            original_filepath = eareports_filepath + item
+            destination = destination_filepath + ea_reports_dict[item]  + item[:-5] + "_" + var_today + ".xlsb"
+            print("File: " + original_filepath + " was saved to ===> " + destination + " folder successfully.")
+            print()
+            copy.copyfile(
+            src=original_filepath,
+            dst=destination)
+            
+        print("EA reports --> Sharepoint script finished sucessfully!")
+    except:
+        print("""
+            An error has occured during copying the file.
+              
+            Details:
+            filename = """ + original_filepath + """
+            destination = """ + destination + """ 
+            """)
+        
+def copy_ea76_to_sharepoint():
+    
+    print()
+  
+    
+    source_folder:str = rf"C:\Users\{ntid}\OneDrive - dummy.xlsx"
+    destination_folder:str = rf"C:\Users\{ntid}\OneDrive -dummy2.xlsx"
+
+    print("Copy " + source_folder + " to ===>>> " + destination_folder + " started!")
+
+    try:
+        copy.copyfile(
+            src=source_folder,
+            dst=destination_folder
+        )
+
+        print("Finished EA76 report...")
+        print()
+    except:
+        print("""
+            Error has occured while trying to copy the file from : """ + source_folder + """ to :  """
+            + destination_folder + """ ! Please check if filenames and folders are valid! 
+        """)
+
+if __name__ == "__main__":
+    main_script()
+    copy_ea76_to_sharepoint()
